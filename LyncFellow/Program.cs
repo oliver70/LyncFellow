@@ -205,13 +205,14 @@ namespace LyncFellow
                     var Initiator = e.Conversation.Participants[1].Contact;
                     Trace.WriteLine(string.Format("LyncFellow: Initiator.Uri=\"{0}\"", Initiator.Uri));
                     // magic heartbeat for incoming conversations from G&K ;-)
-                    if (Initiator.Uri.Contains("glueckkanja") 
+                    if (true || Initiator.Uri.Contains("glueckkanja") 
                         || Initiator.Uri.Contains("+4969800706") 
                         || Initiator.Uri.Contains("+49711460533")
                         || Initiator.Uri.Contains("+4940609298")
                         || Initiator.Uri.Contains("+49151182260"))
                     {
                         _buddies.Heartbeat(10000);
+                        _buddies.Rainbow();
                     }
                 }
             }
