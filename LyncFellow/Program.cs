@@ -20,10 +20,13 @@ namespace LyncFellow
                     MessageBox.Show(Application.ProductName + " is already running!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
+                Trace.Listeners.Add(new TextWriterTraceListener("LyncFellow.log"));//write log file
+                Trace.AutoFlush = true;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 ApplicationContext applicationContext = new ApplicationContext();
+                Trace.WriteLine(string.Format("LyncFellow: about to start")); 
+   
                 Application.Run(applicationContext);
             }
         }
@@ -70,6 +73,7 @@ namespace LyncFellow
 
         private void HousekeepingTimer_Tick(object sender, EventArgs e)
         {
+          
             _housekeepingTimer.Enabled = false;
 
             _buddies.RefreshList();
@@ -194,22 +198,39 @@ namespace LyncFellow
 
             if (IncomingCall)
             {
+                Trace.WriteLine(string.Format("LyncFellow: After Incomming Call"));
                 if (Properties.Settings.Default.DanceOnIncomingCall)
                 {
+                    Trace.WriteLine(string.Format("LyncFellow: Dancing"));
                     _buddies.Dance(5000);
                     _buddies.FlapWings(5000);
                 }
-
+                Trace.WriteLine(string.Format("LyncFellow:  e.Conversation.Participants.Count =\"{0}\"", e.Conversation.Participants.Count));
                 if (e.Conversation.Participants.Count >= 2)
                 {
+                    Trace.WriteLine(string.Format("LyncFellow: After e.Conversation.Participants.Count"));
                     var Initiator = e.Conversation.Participants[1].Contact;
                     Trace.WriteLine(string.Format("LyncFellow: Initiator.Uri=\"{0}\"", Initiator.Uri));
+                    var groups = e.Conversation.Participants[1].Contact.CustomGroups;
+                    foreach (var someGroup in groups)
+                    {
+                        Trace.WriteLine(string.Format("LyncFellow: Group.Name=\"{0}\"", someGroup.Name));
+                        if (someGroup.Name.Contains("heartbeat"))
+                        {
+                            Trace.WriteLine(string.Format("LyncFellow: Heartbeat"));
+                            _buddies.Heartbeat(10000);
+                        }
+                         if (someGroup.Name.Contains("rainbow"))
+                         {
+                             Trace.WriteLine(string.Format("LyncFellow: Rainbow"));
+                            _buddies.Rainbow(3000);
+                         }
+                    }
+               
+
                     // magic heartbeat for incoming conversations from G&K ;-)
-                    if (true || Initiator.Uri.Contains("glueckkanja") 
-                        || Initiator.Uri.Contains("+4969800706") 
-                        || Initiator.Uri.Contains("+49711460533")
-                        || Initiator.Uri.Contains("+4940609298")
-                        || Initiator.Uri.Contains("+49151182260"))
+                    if (Initiator.Uri.Contains("oliver") 
+                         || Initiator.Uri.Contains("+4916097679"))
                     {
                         _buddies.Heartbeat(10000);
                         _buddies.Rainbow();
