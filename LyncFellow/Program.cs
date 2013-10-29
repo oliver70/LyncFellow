@@ -20,13 +20,12 @@ namespace LyncFellow
                     MessageBox.Show(Application.ProductName + " is already running!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                Trace.Listeners.Add(new TextWriterTraceListener("LyncFellow.log"));//write log file
+               // Trace.Listeners.Add(new TextWriterTraceListener("LyncFellow.log"));//write log file
                 Trace.AutoFlush = true;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 ApplicationContext applicationContext = new ApplicationContext();
-                Trace.WriteLine(string.Format("LyncFellow: about to start")); 
-   
+           
                 Application.Run(applicationContext);
             }
         }
@@ -77,10 +76,9 @@ namespace LyncFellow
             _housekeepingTimer.Enabled = false;
 
             _buddies.RefreshList();
-
+        
             if (_lyncClient != null && _lyncClient.State == ClientState.Invalid)
             {
-                Trace.WriteLine("LyncFellow: _lyncClient != null && _lyncClient.State == ClientState.Invalid");
                 ReleaseLyncClient();
             }
             if (_lyncClient == null)
