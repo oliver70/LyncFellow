@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
@@ -20,8 +20,8 @@ namespace LyncFellow
                     MessageBox.Show(Application.ProductName + " is already running!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                //Trace.Listeners.Add(new TextWriterTraceListener("LyncFellow.log"));//write log file
-                //Trace.AutoFlush = true;
+             //   Trace.Listeners.Add(new TextWriterTraceListener("LyncFellow.log"));//write log file
+             //   Trace.AutoFlush = true;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 ApplicationContext applicationContext = new ApplicationContext();
@@ -207,35 +207,35 @@ namespace LyncFellow
                 if (e.Conversation.Participants.Count >= 2)
                 {
                     Trace.WriteLine(string.Format("LyncFellow: After e.Conversation.Participants.Count"));
+                    var Initiator0 = e.Conversation.Participants[0].Contact;
+                    Trace.WriteLine(string.Format("LyncFellow: Initiator0.Uri=\"{0}\"", Initiator0.Uri));
                     var Initiator = e.Conversation.Participants[1].Contact;
                     Trace.WriteLine(string.Format("LyncFellow: Initiator.Uri=\"{0}\"", Initiator.Uri));
                     var manager = _lyncClient.ContactManager;
 
-                    var groups = manager.Groups;
+                    Microsoft.Lync.Model.Group.GroupCollection groups = manager.Groups;
                     Microsoft.Lync.Model.Group.Group rainBowGroup;
                     Microsoft.Lync.Model.Group.Group heartBeatGroup;
 
-                    bool rainBowExists =false ;
+                    
                     if(groups.TryGetGroup("Rainbow", out rainBowGroup)){
                         Trace.WriteLine(string.Format("LyncFellow: Rainbow group found"));
-                        rainBowExists = true;
                     };
 
-                    bool heartBeatExists= false;
+                    
                     if(groups.TryGetGroup("heartbeat", out heartBeatGroup)){
                         Trace.WriteLine(string.Format("LyncFellow: Heartbeat group found"));
-                        heartBeatExists = true;
                     };
 
                  
 
 
-                      if (heartBeatExists && heartBeatGroup.Contains(Initiator))
+                      if (heartBeatGroup != null && heartBeatGroup.Contains(Initiator))
                         {
                             Trace.WriteLine(string.Format("LyncFellow: Heartbeat"));
                             _buddies.Heartbeat(10000);
                         }
-                      if (rainBowExists && rainBowGroup.Contains(Initiator))
+                      if (rainBowGroup != null && rainBowGroup.Contains(Initiator))
                         {
                             Trace.WriteLine(string.Format("LyncFellow: Rainbow"));
                             _buddies.Rainbow(10000);
